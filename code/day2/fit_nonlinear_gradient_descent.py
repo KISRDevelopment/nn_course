@@ -23,14 +23,14 @@ def search(X, y, eta, iterations):
         # update 
         theta = theta - eta * grad
 
-        _, ypred = predict(X, theta)
+        _, _, ypred = predict(X, theta)
 
         mae = np.mean(np.abs(ypred - y))
 
         print("%d Loss: %f" % (i, mae))
 
     # final prediction
-    _, ypred = predict(X, theta)
+    _, _, ypred = predict(X, theta)
 
     mae = np.mean(np.abs(ypred - y))
 
@@ -55,7 +55,7 @@ def plot(X, y, theta):
     gamma1 = theta[3]
 
     xs = np.linspace(0, 10, 1000)
-    ys = gamma0 + gamma1 * np.exp(beta0 + beta1*xs)
+    ys = gamma0 + gamma1 * np.cos(beta0 + beta1*xs)
     ax.plot(xs, ys, linestyle='dashed', color='purple', 
         linewidth=5)
     ax.set_xlabel('$x$', fontsize=26)
@@ -68,21 +68,24 @@ def plot(X, y, theta):
 def predict(X, theta):
     beta0, beta1, gamma0, gamma1 = theta 
 
-    g = np.exp(beta0 + beta1 * X)
+    linear_part = beta0 + beta1 * X
+    g = np.cos(linear_part)
     ypred = gamma0 + gamma1 * g 
 
-    return g, ypred 
+    return linear_part, g, ypred 
 
 def grad_loss(X, y, theta):
     beta0, beta1, gamma0, gamma1 = theta 
 
-    g, ypred = predict(X, theta)
+    linear_part, g, ypred = predict(X, theta)
 
     diff = ypred - y 
 
     # gradients
-    d_beta0 = gamma1 * g * (diff > 0) - gamma1 * g * (diff < 0)
-    d_beta1 = gamma1 * X * g * (diff > 0) - gamma1 * X * g * (diff < 0)
+    d_beta0 = -gamma1 * np.sin(linear_part) * (diff > 0) + \
+        gamma1 * np.sin(linear_part) * (diff < 0)
+    d_beta1 = -gamma1 * X * np.sin(linear_part) * (diff > 0) + \
+        gamma1 * X * np.sin(linear_part) * (diff < 0)
     d_gamma0 = (diff > 0) * 1 -  1 * (diff < 0)
     d_gamma1 = (diff > 0) * g - (diff < 0) * g 
 

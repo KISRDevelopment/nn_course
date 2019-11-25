@@ -27,10 +27,10 @@ def plot_priors(Xtrain, ytrain):
 
     xs = np.linspace(0, 10, 1000)
     
-    gamma0 = [-1, 0, 1]
-    gamma1 = [-2, 0, 2]
+    gamma0 = [0]
+    gamma1 = [-3, -1, 0, 1, 3]
     beta0 = [0]
-    beta1 = [-3, -1, 0,]
+    beta1 = [3, 1]
 
     thetas = list(itertools.product(beta0, beta1, gamma0, gamma1))
 
@@ -41,7 +41,7 @@ def plot_priors(Xtrain, ytrain):
     l = 0
     for l in range(len(colors)):
         theta = thetas[l]
-        ys = theta[2] + theta[3] * np.exp(theta[0] + theta[1] * xs)
+        ys = theta[2] + theta[3] * np.cos(theta[0] + theta[1] * xs)
         ax.plot(xs, ys, linewidth=5, color=colors[l])
 
     ax.set_xlabel('$x$', fontsize=26)

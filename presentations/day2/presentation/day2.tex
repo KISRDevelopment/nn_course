@@ -498,7 +498,7 @@ MAE & 1.627 & \textbf{1.231} & 2.357\tabularnewline
 
 An expert tells us that a better model should have the following form:
 \begin{align*}
-g(x) & =exp(\beta_{0}+\beta_{1}x)\\
+g(x) & =cos(\beta_{0}+\beta_{1}x)\\
 \hat{y}(x) & =\gamma_{0}+\gamma_{1}g(x)
 \end{align*}
 
@@ -527,7 +527,7 @@ Let's revise the math notation a bit to make it easier to show gradient equation
 
 \hfill 
 
-and we are interested in $\frac{\partial}{\partial\theta_{k}}\mathcal{L}(y_{i},\hat{y}_{i})$ for each parameter $\theta_k$ in the model (we have 4 parameters in he nonlinear model from the previous slide).
+and we are interested in $\frac{\partial}{\partial\theta_{k}}\mathcal{L}(y_{i},\hat{y}_{i})$ for each parameter $\theta_k$ in the model (we have 4 parameters in the nonlinear model from the previous slide).
 
 \end{frame}
 
@@ -566,15 +566,15 @@ If $z$ depends on $y$ and $y$ depends on $x$, then:
 
 \[
 \frac{\partial}{\partial\beta_{0}}\mathcal{L}(y_{i},\hat{y}_{i})=\frac{\partial\mathcal{L}}{\partial g}\frac{\partial g}{\partial\beta_{0}}=\begin{cases}
-\gamma_{1}g(x) & \hat{y}_{i}-y_{i}>0\\
--\gamma_{1}g(x) & \hat{y}_{i}-y_{i}<0
+-\gamma_{1}sin(\beta_0 + \beta_1x) & \hat{y}_{i}-y_{i}>0\\
+\gamma_{1}sin(\beta_0 + \beta_1x) & \hat{y}_{i}-y_{i}<0
 \end{cases}
 \]
 
 \[
 \frac{\partial}{\partial\beta_{1}}\mathcal{L}(y_{i},\hat{y}_{i})=\frac{\partial\mathcal{L}}{\partial g}\frac{\partial g}{\partial\beta_{1}}=\begin{cases}
-\gamma_{1}xg(x) & \hat{y}_{i}-y_{i}>0\\
--\gamma_{1}xg(x) & \hat{y}_{i}-y_{i}<0
+-\gamma_{1}xsin(\beta_0 + \beta_1x) & \hat{y}_{i}-y_{i}>0\\
+\gamma_{1}xsin(\beta_0 + \beta_1x) & \hat{y}_{i}-y_{i}<0
 \end{cases}
 \]
 
@@ -590,8 +590,8 @@ If $z$ depends on $y$ and $y$ depends on $x$, then:
 
 \begin{exampleblock}{Result}
 \begin{itemize}
-\item Sometimes the best MAE is 1.358 (Just a null model)
-\item Sometimes it is 1.062 (shown here)
+\item Sometimes the best MAE is 1.014
+\item Sometimes it is 1.117 (shown here)
 \end{itemize}
  \end{exampleblock}
  
@@ -613,10 +613,53 @@ If $z$ depends on $y$ and $y$ depends on $x$, then:
 
 \end{alertblock}
 
- \end{columns}
+\end{columns}
+ 
  
 % GOOD tutorial on optimizers
 % https://mlfromscratch.com/optimizers-explained/#/
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Loss Surface}
+
+We plotted the loss of the model as a function of $\beta_1$ and $\gamma_1$, holding the other two parameters at zero.
+
+ \begin{figure}
+\includegraphics[width=0.8\textwidth]{../figures/nonlinear_loss.png}
+\end{figure}
+
+\begin{block}{Observation}
+
+\begin{itemize}
+\item Solution depends on initialization (where you start from)
+\item May need to do multiple restarts
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Congratulations!}
+
+\begin{itemize}
+\item What you have just implemented is a very simple neural network with one \emph{hidden} neuron, the $cos()$ function, and one \emph{output} neuron.
+\item The algorithm used to train a neural network is called ``Backpropagation'' and as you have just seen, it is simply gradient descent.
+\end{itemize}
+
+Backpropagation consists of a forward and backward pass:
+
+\begin{itemize}
+\item \textbf{Forward pass} is easy: just apply the mathematical function defined by the network on the inputs, while keeping track of all intermediate results. 
+\item \textbf{Backward pass} requires the gradients. Here, the intermediate results kept from the forward pass are used to compute the values of the partial derivatives of the loss with respect to the parameters.
+\end{itemize}
+
+
+
+
 
 
 \end{frame}

@@ -12,8 +12,8 @@ def main():
 
 def compute_loss(X, y):
 
-    beta1 = np.linspace(-1, 1, 100)
-    gamma1 = np.linspace(-1, 1, 100)
+    beta1 = np.linspace(-2, 2, 200)
+    gamma1 = np.linspace(-2, 2, 200)
 
     B0, B1 = np.meshgrid(beta1, gamma1)
     Z = np.zeros_like(B0)
@@ -23,10 +23,11 @@ def compute_loss(X, y):
             gamma1 = B1[i,j]
 
             # compute model predictions
-            yhat = gamma1 * np.exp(beta1 * X)
+            yhat = gamma1 * np.cos(beta1 * X)
 
             Z[i,j] = np.mean(np.abs(yhat - y))
     
+    print("Best loss: %f" % np.min(Z))
     return B0, B1, Z 
 def plot_loss(B0, B1, Z):
     
@@ -49,6 +50,9 @@ def plot_loss(B0, B1, Z):
     ax2.yaxis.set_tick_params(labelsize=26)
     cbar = f.colorbar(cp, ax=ax2)
     cbar.ax.tick_params(labelsize=20) 
+
+    plt.savefig('tmp/nonlinear_loss.png', trasparent=False, pad_inches=0., bbox_inches='tight')
+
 
     plt.show()
 
