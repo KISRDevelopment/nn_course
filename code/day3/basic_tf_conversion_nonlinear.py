@@ -8,7 +8,7 @@ def main():
     data = np.load('fake_data.npz')
     X, y = data['X'], data['y']
 
-    theta = search(X, y, 0.01, 10000)
+    theta = search(X, y, 0.01, 100)
     plot(X, y, theta)
 
 def search(X, y, eta, iterations):
@@ -18,7 +18,10 @@ def search(X, y, eta, iterations):
     y = tf.convert_to_tensor(y, dtype=tf.float32)
 
     # randomly initialize beta0 and beta1
-    theta = tf.convert_to_tensor(rng.randn(4), dtype=tf.float32)
+    theta = tf.Variable(rng.randn(4), dtype=tf.float32)
+
+    # create optimizer
+    optimizer = tf.keras.optimizers.Nadam(learning_rate=0.01)
 
     # repeat N times
     for i in range(iterations):
@@ -30,8 +33,11 @@ def search(X, y, eta, iterations):
 
         dloss_dtheta = g.gradient(loss, theta)
 
-        # update 
-        theta = theta - eta * dloss_dtheta
+        # update with optimizer 
+        optimizer.apply_gradients([(dloss_dtheta, theta)])
+
+        # update  without optimizer
+        #theta = theta - eta * dloss_dtheta
 
         ypred = predict(X, theta)
         loss = tf.reduce_mean(tf.abs(ypred - y))
