@@ -8,10 +8,10 @@ def main():
     data = np.load('fake_data.npz')
     X, y = data['X'], data['y']
 
-    theta = search(X, y, 0.01, 100)
-    plot(X, y, theta)
+    theta = search(X, y, 0.01, 1000, predict_neuron)
+    plot(X, y, theta, predict_neuron)
 
-def search(X, y, eta, iterations):
+def search(X, y, eta, iterations, predictor):
 
     # convert to tensors 
     X = tf.convert_to_tensor(X, dtype=tf.float32)
@@ -28,7 +28,8 @@ def search(X, y, eta, iterations):
         
         with tf.GradientTape() as g:
             g.watch(theta)
-            ypred = predict(X, theta)
+            ypred = predictor(X, theta)
+            
             loss = tf.reduce_mean(tf.abs(ypred - y))
 
         dloss_dtheta = g.gradient(loss, theta)
@@ -39,13 +40,13 @@ def search(X, y, eta, iterations):
         # update  without optimizer
         #theta = theta - eta * dloss_dtheta
 
-        ypred = predict(X, theta)
+        ypred = predictor(X, theta)
         loss = tf.reduce_mean(tf.abs(ypred - y))
 
         print("%d Loss: %f" % (i, loss))
 
     # final prediction
-    ypred = predict(X, theta)
+    ypred = predictor(X, theta)
     loss = tf.reduce_mean(tf.abs(ypred - y))
 
     theta = theta.numpy()
@@ -57,7 +58,7 @@ def search(X, y, eta, iterations):
     return theta
 
 
-def plot(X, y, theta):
+def plot(X, y, theta, predictor):
 
     f, ax = plt.subplots(1, 1, figsize=(20, 10))
 
@@ -70,7 +71,7 @@ def plot(X, y, theta):
     gamma1 = theta[3]
 
     xs = np.linspace(0, 10, 1000)
-    ys = gamma0 + gamma1 * np.cos(beta0 + beta1*xs)
+    ys = predictor(xs, theta)
     ax.plot(xs, ys, linestyle='dashed', color='purple', 
         linewidth=5)
     ax.set_xlabel('$x$', fontsize=26)
@@ -87,6 +88,14 @@ def predict(X, theta):
     ypred = theta[2]  + theta[3] * g
 
     return ypred
+
+def predict_neuron(X, theta):
+
+    linear_part = theta[0] + theta[1] * X 
+    g = tf.tanh(linear_part)
+    ypred = theta[2] + theta[3] * g 
+
+    return ypred 
 
 # def grad_loss(X, y, theta):
 #     beta0, beta1, gamma0, gamma1 = theta 
