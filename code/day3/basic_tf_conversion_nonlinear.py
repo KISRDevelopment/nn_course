@@ -21,7 +21,7 @@ def search(X, y, eta, iterations, predictor):
     theta = tf.Variable(rng.randn(4), dtype=tf.float32)
 
     # create optimizer
-    optimizer = tf.keras.optimizers.Nadam(learning_rate=0.01)
+    optimizer = tf.keras.optimizers.Nadam(learning_rate=eta)
 
     # repeat N times
     for i in range(iterations):
