@@ -2,15 +2,19 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt 
 import numpy.random as rng
+import tensorflow.keras.utils 
 
 def main():
 
-    data = np.load('fake_data.npz')
+    data = np.load('classification_data.npz')
     X, y = data['X'], data['y']
 
+    # convert class number to one-hot-encoded vector
+    y = tf.keras.utils.to_categorical(y)
+    
     nn, losses = search(X, y, 0.01, 2000)
 
-    plot(X, y, nn)
+    # plot(X, y, nn)
     plot_losses(losses)
 
 def split_data(X, y, prop):
@@ -43,13 +47,13 @@ def search(X, y, eta, iterations):
     y_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
 
     # create nn 
-    trainables, nn = create_nn(20)
+    trainables, nn = create_nn(2, y.shape[1])
 
     # create optimizer
     optimizer = tf.keras.optimizers.Nadam(learning_rate=eta)
 
     # repeat N times
-    loss_func = mse_loss
+    loss_func = xe_loss
     losses = []
     for i in range(iterations):
         
@@ -77,76 +81,60 @@ def search(X, y, eta, iterations):
     losses = np.array(losses)
     return nn, losses
 
-def plot(X, y, nn):
-
-    f, ax = plt.subplots(1, 1, figsize=(20, 10))
-
-    ax.plot(X, y, marker='o', linestyle='', color='gold', 
-        markersize=30, markeredgewidth=4, markeredgecolor='black')
-
-    xs = np.linspace(0, 10, 1000)[:,None].astype(np.float32)
-    ys = nn(xs)
-    ax.plot(xs, ys, linestyle='dashed', color='purple', 
-        linewidth=5)
-    ax.set_xlabel('$x$', fontsize=26)
-    ax.set_ylabel('$y$', fontsize=26)
-    ax.xaxis.set_tick_params(labelsize=26)
-    ax.yaxis.set_tick_params(labelsize=26)
-
-    plt.savefig('tmp/best_nn.png', trasparent=False, pad_inches=0., bbox_inches='tight')
-
-    plt.show()
-
 def plot_losses(losses):
 
     f, ax = plt.subplots(1, 1, figsize=(20, 10))
     ax.plot(np.arange(losses.shape[0]), losses[:,0], linewidth=5, label='training')
     ax.plot(np.arange(losses.shape[0]), losses[:,1], linewidth=5, label='testing')
     ax.set_xlabel('Iteration', fontsize=26)
-    ax.set_ylabel('MAE', fontsize=26)
+    ax.set_ylabel('Loss', fontsize=26)
     ax.xaxis.set_tick_params(labelsize=26)
     ax.yaxis.set_tick_params(labelsize=26)
     ax.legend(fontsize=26)
     plt.show()
 
-def create_nn(n_hidden):
+def create_nn(n_hidden, n_classes):
 
     # hidden layer weight matrix 
-    Wh = tf.Variable(rng.random((1, n_hidden)), dtype=tf.float32)
+    Wh = tf.Variable(rng.random((2, n_hidden)), dtype=tf.float32)
 
     # hidden layer bias vector
     bh = tf.Variable(rng.random((n_hidden, 1)), dtype=tf.float32)
 
     # output layer weight matrix 
-    Wo = tf.Variable(rng.random((n_hidden, 1)), dtype=tf.float32)
+    Wo = tf.Variable(rng.random((n_hidden, n_classes)), dtype=tf.float32)
 
     # output layer bias vector
-    bo = tf.Variable(rng.random((1,1)), dtype=tf.float32)
+    bo = tf.Variable(rng.random((n_classes,1)), dtype=tf.float32)
 
     # this is a list of things that can be trained by the 
     # SGD optimizer
     trainables = [Wh, bh, Wo, bo]
 
     def call(X):
-        """ X is [n_samples, 1] """
+        """ X is [n_samples, 2] """
 
         # compute hidden activations
         # hidden_input and hidden_activation are [n_samples, n_hidden]
         hidden_input = tf.matmul(X, Wh) + tf.transpose(bh)
         hidden_activation = tf.tanh(hidden_input)
 
-        # compute output activation [n_samples, 1]
-        output = tf.matmul(hidden_activation, Wo) + tf.transpose(bo)
+        # compute output activation [n_samples, n_classes]
+        logits = tf.matmul(hidden_activation, Wo) + tf.transpose(bo)
+
+        # finally we apply softmax to transform logits 
+        # into probabilities
+        output = tf.exp(logits) / tf.reduce_sum(tf.exp(logits), axis=1, keepdims=True)
 
         return output 
     
     return trainables, call
 
-def mae_loss(ytrue, ypred):
-    return tf.reduce_mean(tf.abs(ypred - ytrue))
-
-def mse_loss(ytrue, ypred):
-    return tf.reduce_mean(tf.square(ypred - ytrue))
+def xe_loss(ytrue, ypred):
+    """ ytrue: [n_samples, n_classes]
+        ypred: [n_samples, n_classes] """
+    loss = tf.reduce_sum(ytrue * ypred, axis=1)
+    return tf.reduce_mean(loss)
 
 if __name__ == "__main__":
     main()
