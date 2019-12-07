@@ -5,13 +5,14 @@ import sklearn.metrics
 def main():
 
 
-    y_true = np.array([0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0])
-    y_pred = generate_ypred(y_true, 3)
-
+    y_true = np.array([0, 1, 1, 0, 1, 1, 0])
+    y_pred = generate_ypred(y_true, 4)
+    print(y_true)
+    print(', '.join(['%0.2f' % e for e in y_pred]))
     auc = sklearn.metrics.roc_auc_score(y_true, y_pred)
 
     for thres in np.linspace(0, 1, 9):
-        hard_pred = threshold(y_pred, thres)
+        hard_pred = threshold_naive(y_pred, thres)
         acc = sklearn.metrics.accuracy_score(y_true, hard_pred)
         print("Accuracy at %0.2f: %0.2f" % (thres, acc))
 
@@ -48,5 +49,7 @@ def threshold(y_pred, thres):
 
     return 0 * (y_pred < thres) + 1 * (y_pred >= thres)
 
+def threshold_naive(y_pred, thres):
+    return 0 * (y_pred < thres) + 1 * (y_pred >= thres)
 if __name__ == "__main__":
     main()
