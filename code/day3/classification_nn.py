@@ -47,7 +47,7 @@ def search(X, y, eta, iterations):
     y_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
 
     # create nn 
-    trainables, nn = create_nn(2, y.shape[1])
+    trainables, nn = create_nn(10, y.shape[1])
 
     # create optimizer
     optimizer = tf.keras.optimizers.Nadam(learning_rate=eta)
