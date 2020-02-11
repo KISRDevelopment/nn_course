@@ -1,0 +1,27 @@
+- Regression problem    [ok]
+- Optimization:         [ok]
+    - Brute force
+    - Gradient descent
+    - Objective function
+- Models:               [ok]
+    - Null model
+    - Linear model
+    - Nonlinear model
+- Basic backpropagation algorithm   [ok]
+- Conversion to Tensorflow 
+- Overfitting:
+    - Training and testing
+    - Protection: early stopping
+    - Protection: dropout
+- Cross-validation
+- Binary and multiclass classification:
+    - The softmax function
+    - Evaluation metrics: Confusion matrix, ROC, F1, Precision, Recall
+    - MSE vs XE [ok]
+- Conversion to Keras
+- MNIST example in Keras
+- CNN MNIST example in Keras
+- Time series modeling in Keras (RNN)
+
+- Real world data handling
+
