@@ -3,6 +3,7 @@
     - Brute force
     - Gradient descent
     - Objective function
+- Data preprocessing
 - Models:               [ok]
     - Null model
     - Linear model
@@ -13,11 +14,13 @@
     - Training and testing
     - Protection: early stopping
     - Protection: dropout
+    - L1, L2
 - Cross-validation
 - Binary and multiclass classification:
     - The softmax function
     - Evaluation metrics: Confusion matrix, ROC, F1, Precision, Recall
     - MSE vs XE [ok]
+    - Unbalanced dataset
 - Conversion to Keras
 - MNIST example in Keras
 - CNN MNIST example in Keras
