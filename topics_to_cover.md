@@ -1,3 +1,37 @@
+Sequence:
+
+    1. Brute force optimization [OK]
+        - Objective function
+        - Null model
+        - Linear model
+        - Nonlinear model
+
+    2. Gradient descent optimization
+        - Linear model derivation
+        - Nonlinear model derivation
+        - Effect of learning rate
+
+    3. SGD with Tensorflow
+        - Conversion of nonlinear model to tensorflow
+        - Optimizaters
+
+    4. Neural Networks
+        - General architecture
+        - Activation functions
+
+    5. Evaluation: training, validation, and testing
+        - Overfitting and regularization
+        
+    6. Classification
+        - Softmax and cross-entropy
+        - Evaluation metrics
+        - Unbalanced datasets 
+    
+    7. Time series modeling
+        - RNN
+    
+    8. Keras 
+
 - Regression problem    [ok]
 - Optimization:         [ok]
     - Brute force
