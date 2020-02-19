@@ -41,6 +41,7 @@ def search(X, y, eta, iterations, predictor):
         #theta = theta - eta * dloss_dtheta
 
         ypred = predictor(X, theta)
+
         loss = tf.reduce_mean(tf.abs(ypred - y))
 
         print("%d Loss: %f" % (i, loss))
