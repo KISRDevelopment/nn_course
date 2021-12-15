@@ -21,7 +21,7 @@ def main():
     plt.show()
 
     np.savez('classification_data', X=X, y=y)
-y4r4h33m
+
 
 if __name__ == "__main__":
     main()
