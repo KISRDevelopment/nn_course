@@ -18,9 +18,12 @@ We will use `Miniconda`, a free minimal installer of Python and its related pack
 Download and run the [Miniconda 3 Windows 64-bit installer](https://docs.conda.io/en/latest/miniconda.html). Don't change the default options in the installer.
 
 ### Mac OS
-Follow the instructions to install [Miniconda](https://conda.io/projects/conda/en/latest/user-guide/install/macos.html) on Mac OS.
+For __Intel Based Macs__ Follow the instructions to install [Miniconda](https://conda.io/projects/conda/en/latest/user-guide/install/macos.html) on Mac OS.
 
-**Note**: Make sure to download the appropriate installer for your Mac architecture. For new M1 Macs, pick `Miniconda3 macOS Apple M1 ARM 64-bit bash`. For older Intel-based Macs, pick `Miniconda3 macOS 64-bit bash`.
+For __M1 Based Macs__ Download the [community-supported version of miniconda](https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh), known as miniforge, then install from the Terminal application as follows:
+```bash
+bash Miniforge3-MacOSX-arm64.sh
+```
 
 ## 2. Configuring the Environment
 
@@ -36,10 +39,21 @@ A virtual environment lets developers isolate different versions of the same pac
 ```bash
 conda activate nncourse
 ```
-4. Install the required packages for this course into the `nncourse` environment:
+4. Install the required packages for this course into the `nncourse` environment.
+
+__For non-Apple M1 machines__: 
 ```bash
 conda install numpy pandas matplotlib tensorflow
 ```
+
+
+__For Apple M1__:
+```bash
+conda install -c apple tensorflow-deps
+python -m pip install tensorflow-macos
+conda install pandas matplotlib
+```
+
 `numpy` is the most fundamental library for math, vector, and matrix operations. `pandas` makes it easy to interact with tabular data (csv and excel files). `matplotlib` is used for plotting diagrams. `tensorflow` lets us build neural network models.
 
 5. Install the `jupyterlab` package from the third-party package repository known as condaforge:
