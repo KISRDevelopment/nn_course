@@ -43,7 +43,7 @@ conda activate nncourse
 
 __For non-Apple M1 machines__: 
 ```bash
-conda install numpy pandas matplotlib tensorflow
+conda install numpy pandas matplotlib scikit-learn tensorflow
 ```
 
 
@@ -51,7 +51,7 @@ __For Apple M1__:
 ```bash
 conda install -c apple tensorflow-deps
 python -m pip install tensorflow-macos
-conda install pandas matplotlib
+conda install pandas matplotlib scikit-learn
 ```
 
 `numpy` is the most fundamental library for math, vector, and matrix operations. `pandas` makes it easy to interact with tabular data (csv and excel files). `matplotlib` is used for plotting diagrams. `tensorflow` lets us build neural network models.
